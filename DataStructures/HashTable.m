@@ -2,8 +2,7 @@
 //  HashTable.m
 //  DataStructures
 //
-//  Created by mike davis on 9/20/15.
-//  Copyright © 2015 mike davis. All rights reserved.
+//  Copyright © 2015 CF. All rights reserved.
 //
 
 #import "HashTable.h"

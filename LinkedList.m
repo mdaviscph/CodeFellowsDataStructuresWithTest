@@ -1,9 +1,8 @@
 //
-//  NodeLinkedList.m
+//  LinkedList.m
 //  DataStructures
 //
-//  Created by mike davis on 9/6/15.
-//  Copyright (c) 2015 mike davis. All rights reserved.
+//  Copyright (c) 2015 CF. All rights reserved.
 //
 
 #import "LinkedList.h"
