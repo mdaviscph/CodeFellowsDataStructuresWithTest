@@ -7,8 +7,9 @@
 //
 
 #import "HashTable.h"
+#import "HashNode.h"                                        // added after testObjectStillRetrievableAfterCollision
 
-static const NSUInteger kAllocationSize = 32;         // added after testObjectEqualToInitialSetObject
+static const NSUInteger kAllocationSize = 8;                // added after testObjectEqualToInitialSetObject
 
 @interface HashTable ()
 
@@ -19,11 +20,13 @@ static const NSUInteger kAllocationSize = 32;         // added after testObjectE
 
 @implementation HashTable
 
-- (NSUInteger)count {               // added after testObjectEqualToSetObjectWithSameKey
+// added after testObjectEqualToSetObjectWithSameKey
+- (NSUInteger)count {
   return self.ccount;
 }
 
-- (instancetype)init {              // added after testObjectEqualToInitialSetObject
+// added after testObjectEqualToInitialSetObject
+- (instancetype)init {
     self = [super init];
     if (self) {
       _hashNodes = [[NSMutableArray alloc] initWithCapacity:kAllocationSize];
@@ -38,17 +41,63 @@ static const NSUInteger kAllocationSize = 32;         // added after testObjectE
   //self.count = 1;                                     // added after testCountIsOneAfterInitialSet
   //self.count++;                                       // added after testCountIsTwoAfterSecondSet
   //self.hashNodes[0] = object;                         // added after testObjectEqualToInitialSetObject
-  self.hashNodes[[HashTable hashValue:key]] = object;   // added after testObjectEqualToSetObjectWithSameKey
+  //self.hashNodes[[HashTable hashValue:key]] = object; // added after testObjectEqualToSetObjectWithSameKey
   self.ccount++;                                        // added after testObjectEqualToSetObjectWithSameKey
+  //HashNode *node = [[HashNode alloc] init];           // added after testObjectStillRetrievableAfterCollision
+  //node.object = object;                               // added after testObjectStillRetrievableAfterCollision
+  //node.key = key;                                     // added after testObjectStillRetrievableAfterCollision
+  //self.hashNodes[[HashTable hashValue:key]] = node;   // added after testObjectStillRetrievableAfterCollision
+  
+  // added after testObjectStillRetrievableAfterCollision
+  HashNode *node = self.hashNodes[[HashTable hashValue:key]];
+  if ([node isEqual:[NSNull null]]) {
+    self.hashNodes[[HashTable hashValue:key]] = [[HashNode alloc] init:object withKey:key withNext:nil];
+    return;
+  }
+  //node.next = [[HashNode alloc] init:object withKey:key withNext:nil]; // added after testObjectStillRetrievableAfterCollision
+  
+  // added after testObjectStillRetrievableAfterMultipleCollisions
+  HashNode *prevNode = node;
+  while (node) {
+    if ([node.key isEqualToString:key]) {
+      node.object = object;
+      return;
+    }
+    prevNode = node;
+    node = node.next;
+  }
+  prevNode.next = [[HashNode alloc] init:object withKey:key withNext:nil];
 }
 
-- (id)objectForKey:(NSString *)key {                  // added after testObjectNonNilAfterInitialGet
-  //return [[NSObject alloc] init];                   // added after testObjectNonNilAfterInitialGet
-  //return self.hashNodes[0];                         // added after testObjectEqualToInitialSetObject
-  return self.hashNodes[[HashTable hashValue:key]];   // added after testObjectEqualToSetObjectWithSameKey
+- (id)objectForKey:(NSString *)key {                    // added after testObjectNonNilAfterInitialGet
+  //return [[NSObject alloc] init];                     // added after testObjectNonNilAfterInitialGet
+  //return self.hashNodes[0];                           // added after testObjectEqualToInitialSetObject
+  //return self.hashNodes[[HashTable hashValue:key]];   // added after testObjectEqualToSetObjectWithSameKey
+  
+  // added after testObjectNilIfNeverAdded
+  //id object = self.hashNodes[[HashTable hashValue:key]];
+  //if ([object isEqual:[NSNull null]]) {
+  //  return nil;
+  //}
+  //return object;
+  
+  // added after testObjectStillRetrievableAfterCollision
+  HashNode *node = self.hashNodes[[HashTable hashValue:key]];
+  if ([node isEqual:[NSNull null]]) {
+    return nil;
+  }
+  while (node) {
+    if ([node.key isEqualToString:key]) {
+      return node.object;
+    }
+    node = node.next;
+  }
+  return nil;
 }
 
-+ (NSUInteger)hashValue:(NSString *)key {     // added after testObjectEqualToSetObjectWithSameKey
+// added after testObjectEqualToSetObjectWithSameKey
++ (NSUInteger)hashValue:(NSString *)key {
   return [key hash] % kAllocationSize;
 }
+
 @end
