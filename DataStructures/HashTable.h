@@ -10,9 +10,10 @@
 
 @interface HashTable : NSObject
 
-@property (nonatomic) NSUInteger count;   // added after testCountIsZeroAfterInit
+//@property (nonatomic) NSUInteger count;           // added after testCountIsZeroAfterInit
+@property (readonly, nonatomic) NSUInteger count;   // added after testObjectEqualToSetObjectWithSameKey
 
-- (void)setObject:(id)object forKey:(NSObject *)key;  // added after testCountIsOneAfterInitialSet
-- (id)objectForKey:(NSObject *)key;                 // added after testObjectNonNilAfterInitialGet
+- (void)setObject:(id)object forKey:(NSString *)key;  // added after testCountIsOneAfterInitialSet
+- (id)objectForKey:(NSString *)key;                 // added after testObjectNonNilAfterInitialGet
 
 @end

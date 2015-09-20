@@ -13,7 +13,6 @@
 @interface HashTableTests : XCTestCase
 
 @property (strong, nonatomic) HashTable *hashTable;     // added after testExistsAfterInit
-@property (strong, nonatomic) NSNumber *firstObject;    // added after testCountIsOneAfterInitialSet
 
 @end
 
